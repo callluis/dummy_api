@@ -68,7 +68,7 @@ class SignUp(BaseResource):
         pasword = make_password_hashing(new_password)
 
         if len(users) == 1:
-            if not checking_password_hash(password, users[0][username]['password']):
+            if not checking_password_hash(password, users[0]['password']):
                 error = {
                     'description': 'Incorrect password entered',
                 }
@@ -103,16 +103,16 @@ class SignUp(BaseResource):
         users = db.fetch_users(username)
 
         if len(users) == 1:
-            if not checking_password_hash(password, users[0][username]['password']):
+            if not checking_password_hash(password, users[0]['password']):
                 error = {
                     'description': 'Incorrect password entered',
                 }
                 LOG.error(error)
                 raise generic_error_handler(401, req=req, error_override=error)
             else:
-                db.update_password(users[0][username]['id_'], pasword)
+                db.update_password(users[0]['id'], pasword)
                 data = {
-                    'id': users[0][username]['id_'],
+                    'id': users[0]['id'],
                     'username': username
                 }
 
@@ -162,13 +162,8 @@ class SignUp(BaseResource):
     def on_get(self, req, res):
         if req.get_header('SUPER_ADMIN_KEY') == SUPER_ADMIN_KEY:
             username = req.params.get('username')
-            user_id = req.params.get('id_')
-            if username:
-                users = db.fetch_users(username=username, hide_pass=True)
-            elif user_id:
-                users = db.fetch_users(user_id=user_id, hide_pass=True)
-            else:
-                users = db.fetch_users(hide_pass=True)
+            user_id = req.params.get('id')
+            users = db.fetch_users(username=username, user_id=user_id, hide_pass=True)
             self.on_success(res, {'items': users})
         else:
             error = {

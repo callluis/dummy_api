@@ -61,7 +61,9 @@ def create_user(id_, username, password):
 def fetch_users(username=None, user_id=None, hide_pass=None):
     conn = create_connection(DATABASE)
     c = conn.cursor()
-    if user_id:
+    if username and user_id:
+        c.execute("SELECT id_, username, password FROM users WHERE id_=? AND username=?", (user_id, username))
+    elif user_id:
         c.execute("SELECT id_, username, password FROM users WHERE id_=?", (user_id, ))
     elif username:
         c.execute("SELECT id_, username, password FROM users WHERE username=?", (username, ))
@@ -71,12 +73,11 @@ def fetch_users(username=None, user_id=None, hide_pass=None):
     users = []
     for user in rows:
         username = {
-            user[1] : {
-                'id_': user[0]
-            }
+            'id': user[0],
+            'username': user[1]
         }
         if not hide_pass:
-            username[user[1]]['password'] = user[2]
+            username['password'] = user[2]
         users.append(username)
     conn.close()
     return users

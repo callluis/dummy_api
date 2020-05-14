@@ -4,7 +4,7 @@ from db.database import create_connection, create_table
 
 sql_create_users_table = """CREATE TABLE IF NOT EXISTS users (
                                 id_ text PRIMARY KEY UNIQUE,
-                                username text NOT NULL UNIQUE,
+                                username text NOT NULL,
                                 password int NOT NULL
 ); """
 
