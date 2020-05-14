@@ -9,9 +9,10 @@ from falcon import status_codes
 APP_NAME = 'Dummy API'
 
 # =============================================================================
-# API
+# AUTHENTICATION & AUTHORIZATION
 # =============================================================================
 API_SECRET_KEY = os.environ.get('API_SECRET_KEY', 'whatever')
+SUPER_ADMIN_KEY = os.environ.get('SUPER_ADMIN_KEY', 'SUPER')
 
 # =============================================================================
 # Logging
