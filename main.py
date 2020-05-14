@@ -3,7 +3,7 @@
 import falcon
 
 from api.common import base
-from api.v1 import astronauts, dummy_auth as d4uth
+from api.v1 import astronauts, users
 from conf.config import APP_NAME, LOG
 from db import init_session
 from middleware import ConvertToJson, RequireJSON
@@ -16,7 +16,8 @@ class App(falcon.API):
         self.add_route('/', base.BaseResource())
         
         # Auth
-        self.add_route('/api/credentials', d4uth.SignUp())
+        self.add_route('/api/users', users.SignUp())
+        self.add_route('/api/users/{user_id}', users.SignUp())
         # self.add_route('/api/login', d4uth.Login())
         
         # Astronauts
