@@ -1,12 +1,4 @@
 
-ACTIVE_USERS = []
-# ACTIVE_USERS = {
-#     'tom': {
-#         'password': 'whatever',
-#         'secret':   'revetahw'
-#     }
-# }
-
 INITIAL_ASTRONAUTS = [
     {
         "id": 1,

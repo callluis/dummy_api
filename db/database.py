@@ -1,8 +1,9 @@
+from contextlib import suppress
 
 import sqlite3
 from sqlite3 import Error
 
-from conf.config import LOG
+from conf.config import LOG, DATABASE
 
 def create_connection(db_file):
     """ create a database connection to the SQLite database
@@ -32,18 +33,85 @@ def create_table(conn, create_table_sql):
         LOG.error(ex)
         raise Exception(ex)
 
+def replace_user_info(id_, username, password):
+    conn = create_connection(DATABASE)
+    c = conn.cursor()
+    try:
+        c.execute(f"DELETE FROM users WHERE username=?", (username, ))
+        c.execute(
+            "INSERT INTO users(id_, username, password) VALUES(?, ?, ?)", (id_, username, password))
+        conn.commit()
+    except sqlite3.IntegrityError as ex:
+        LOG.error(ex)
+        raise Exception(ex)
+    conn.close()
 
-# def create_guild(sid, name, owner_id):
-#     conn = create_connection(database)
+def create_user(id_, username, password):
+    conn = create_connection(DATABASE)
+    c = conn.cursor()
+    try:
+        c.execute(
+            "INSERT INTO users(id_, username, password) VALUES(?, ?, ?)", (id_, username, password))
+        conn.commit()
+    except sqlite3.IntegrityError as ex:
+        LOG.error(ex)
+        raise Exception(ex)
+    conn.close()
+
+def fetch_users(username=None, user_id=None, hide_pass=None):
+    conn = create_connection(DATABASE)
+    c = conn.cursor()
+    if user_id:
+        c.execute("SELECT id_, username, password FROM users WHERE id_=?", (user_id, ))
+    elif username:
+        c.execute("SELECT id_, username, password FROM users WHERE username=?", (username, ))
+    else:
+        c.execute("SELECT id_, username, password FROM users")
+    rows = c.fetchall()
+    users = []
+    for user in rows:
+        username = {
+            user[1] : {
+                'id_': user[0]
+            }
+        }
+        if not hide_pass:
+            username[user[1]]['password'] = user[2]
+        users.append(username)
+    conn.close()
+    return users
+
+def update_password(id_, password):
+    conn = create_connection(DATABASE)
+    c = conn.cursor()
+    c.execute("UPDATE users SET password = ? WHERE id_ = ?", (password, id_))
+    conn.commit()
+    conn.close()
+
+def delete_from_table(id_):
+    conn = create_connection(DATABASE)
+    c = conn.cursor()
+    c.execute(f"DELETE FROM users WHERE id_=?", (id_, ))
+    conn.commit()
+    conn.close()
+
+# def delete_from_table(id_, table):
+#     conn = create_connection(DATABASE)
 #     c = conn.cursor()
-#     try:
-#         c.execute(
-#             "INSERT INTO guilds(sid, name, owner_id, prefix) VALUES(?, ?, ?, ?)", (sid, name, owner_id, config.CONFIG["DEFAULT_PREFIX"]))
-#         conn.commit()
-#     except sqlite3.IntegrityError:
-#         pass
+#     c.execute(f"DELETE FROM {table} WHERE id_ = {id_}")
+#     conn.commit()
 #     conn.close()
 
+# def fetch_colors(sid):
+#     conn = create_connection(database)
+#     c = conn.cursor()
+#     c.execute("SELECT name, role_id FROM colors WHERE sid=?", (sid, ))
+#     rows = c.fetchall()
+#     colors = {}
+#     for role in rows:
+#         colors[role[0]] = role[1]
+#     conn.close()
+#     return colors
 
 # def delete_guild(sid):
 #     conn = create_connection(database)
@@ -73,19 +141,6 @@ def create_table(conn, create_table_sql):
 #               (sid, name, role_id))
 #     conn.commit()
 #     conn.close()
-
-
-# def fetch_colors(sid):
-#     conn = create_connection(database)
-#     c = conn.cursor()
-#     c.execute("SELECT name, role_id FROM colors WHERE sid=?", (sid, ))
-#     rows = c.fetchall()
-#     colors = {}
-#     for role in rows:
-#         colors[role[0]] = role[1]
-#     conn.close()
-#     return colors
-
 
 # # Autorole area
 

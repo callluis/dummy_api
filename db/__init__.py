@@ -3,8 +3,8 @@ from conf.config import LOG, DATABASE
 from db.database import create_connection, create_table
 
 sql_create_users_table = """CREATE TABLE IF NOT EXISTS users (
-                                id_ text PRIMARY KEY,
-                                username text NOT NULL,
+                                id_ text PRIMARY KEY UNIQUE,
+                                username text NOT NULL UNIQUE,
                                 password int NOT NULL
 ); """
 
