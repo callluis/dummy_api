@@ -11,17 +11,15 @@ from db import database as db
 from utils.errors import generic_error_handler
 from utils.hashing_tools import make_password_hashing, checking_password_hash
 
-class SignUp(BaseResource):
+class Users(BaseResource):
     """
     Handle for endpoint: /api/credentials
     """
     def __init__(self, **kwargs):
         """ Creates a client instance """
-        super(SignUp, self).__init__(**kwargs)
+        super(Users, self).__init__(**kwargs)
         
     def on_post(self, req, res):
-        # import pdb
-        # pdb.set_trace()
         if "multipart/form-data" in req.content_type:
             username = req.params.get('username') 
             password = req.params.get('password')
@@ -135,9 +133,9 @@ class SignUp(BaseResource):
 
     def on_delete(self, req, res, user_id=None):
         if user_id:
-            user = db.fetch_users(None, user_id=user_id)
+            users = db.fetch_users(None, user_id=user_id)
 
-            if user:
+            if users:
                 if req.get_header('SUPER_ADMIN_KEY') == SUPER_ADMIN_KEY:
                     db.delete_from_table(user_id)
                     self.on_no_content(res, {})
@@ -159,12 +157,28 @@ class SignUp(BaseResource):
         else:
             raise generic_error_handler(500, req=req)
 
-    def on_get(self, req, res):
+    def on_get(self, req, res, user_id=None):
         if req.get_header('SUPER_ADMIN_KEY') == SUPER_ADMIN_KEY:
-            username = req.params.get('username')
-            user_id = req.params.get('id')
-            users = db.fetch_users(username=username, user_id=user_id, hide_pass=True)
-            self.on_success(res, {'items': users})
+            if user_id:
+                users = db.fetch_users(user_id=user_id, hide_pass=True)
+                if users:
+                    data = {
+                        'id': user_id,
+                        'username': users[0]['username']
+                    }
+                else:
+                    error = {
+                        'description': 'Invalid user_id',
+                        'details': f"{user_id} doesn't exist."
+                    }
+                    LOG.error(error)
+                    raise generic_error_handler(404, req=req, error_override=error)
+            else:
+                username = req.params.get('username')
+                user_id = req.params.get('id')
+                users = db.fetch_users(username=username, user_id=user_id, hide_pass=True)
+                data = {'items': users}
+            self.on_success(res, data)
         else:
             error = {
                 'description': 'Unauthorized',

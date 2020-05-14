@@ -15,9 +15,9 @@ class App(falcon.API):
         LOG.info(f'Starting {APP_NAME}')
         self.add_route('/', base.BaseResource())
         
-        # Auth
-        self.add_route('/api/users', users.SignUp())
-        self.add_route('/api/users/{user_id}', users.SignUp())
+        # Users
+        self.add_route('/api/users', users.Users())
+        self.add_route('/api/users/{user_id}', users.Users())
         # self.add_route('/api/login', d4uth.Login())
         
         # Astronauts
