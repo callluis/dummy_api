@@ -1,4 +1,5 @@
 from contextlib import suppress
+from collections import OrderedDict
 
 import sqlite3
 from sqlite3 import Error
@@ -18,7 +19,6 @@ def create_connection(db_file):
         LOG.error(ex)
         raise Exception(ex)
     return None
-
 
 def create_table(conn, create_table_sql):
     """ create a table from the create_table_sql statement
@@ -102,6 +102,65 @@ def drop_table(table):
     c.execute(f"DROP TABLE IF EXISTS {table};")
     conn.commit()
     conn.close()
+
+def add_astronauts_bulk(astronauts):
+    conn = create_connection(DATABASE)
+    c = conn.cursor()
+    for astronaut in astronauts:
+        skills = ",".join(astronaut["skills"])
+        try:
+            c.execute(
+                f"""INSERT INTO astronauts (
+                    id_, active, firstName, lastName, skills, hoursInSpace, picture)
+                    VALUES (
+                    '{astronaut["id"]}',
+                    '{astronaut["active"]}',
+                    '{astronaut["firstName"]}',
+                    '{astronaut["lastName"]}',
+                    '{skills}',
+                    '{astronaut["hoursInSpace"]}',
+                    '{astronaut["picture"]}');""")
+        except sqlite3.IntegrityError as ex:
+            conn.close()
+            LOG.error(ex)
+            raise Exception(f"{ex} when processing: {astronaut['firstName']} {astronaut['lastName']}")
+    conn.commit()
+    conn.close()
+
+def build_filters(filters):
+    valid_filters = ['id_', 'active', 'firstName', 'lastName']
+    query = ""
+    for k,v in filters.items():
+        if k in valid_filters:
+            query += f"{k} = '{v}' AND "
+    if query:
+        query = f"WHERE {query.rsplit(' AND ', 1)[0]}" 
+    return query
+
+def fetch_astronauts(filters=None):
+    conn = create_connection(DATABASE)
+    c = conn.cursor()
+
+    query = ''
+    if filters:
+        query = build_filters(filters)
+
+    c.execute(f"SELECT * FROM astronauts {query};")
+    rows = c.fetchall()
+    astronauts = []
+    for row in rows:
+        tmp_astronaut = OrderedDict()
+        tmp_astronaut["id"] = row[0]
+        tmp_astronaut["active"] = bool(row[1])
+        tmp_astronaut["firstName"] = row[2]
+        tmp_astronaut["lastName"] = row[3]
+        tmp_astronaut["skills"] = row[4].split(",")
+        tmp_astronaut["hoursInSpace"] = int(row[5])
+        tmp_astronaut["picture"] = row[6]
+        astronauts.append(tmp_astronaut)
+    
+    conn.close()
+    return astronauts
 
 # def delete_from_table(id_, table):
 #     conn = create_connection(DATABASE)

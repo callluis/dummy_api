@@ -1,7 +1,7 @@
 
-INITIAL_ASTRONAUTS = [
+ASTRONAUTS = [
     {
-        "id": 1,
+        "id": "a8d4d2dd-3447-4d9e-902c-b22a66327f78",
         "active": False,
         "firstName": "Mae",
         "lastName": "Jemison",
@@ -12,7 +12,7 @@ INITIAL_ASTRONAUTS = [
         "picture": "mae-jemison.jpg"
     },
     {
-        "id": 2,
+        "id": "b38ef558-c8a9-464a-884b-8d7737e20e08",
         "active": False,
         "firstName": "Frederick",
         "lastName": "Gregory",
@@ -23,7 +23,7 @@ INITIAL_ASTRONAUTS = [
         "picture": "frederick-gregory.jpg"
     },
     {
-        "id": 3,
+        "id": "5083a5ea-f37b-4f64-85bf-c6cf2cc55f31",
         "active": True,
         "firstName": "Ellen",
         "lastName": "Ochoa",
@@ -34,7 +34,7 @@ INITIAL_ASTRONAUTS = [
         "picture": "ellen-ochoa.jpg"
     },
     {
-        "id": 4,
+        "id": "8d6277fb-c950-460b-a0b7-903080cc2dee",
         "active": False,
         "firstName": "Guion",
         "lastName": "Bluford",
@@ -46,7 +46,7 @@ INITIAL_ASTRONAUTS = [
         "picture": "guion-bluford.jpg"
     },
     {
-        "id": 5,
+        "id": "92b1170d-87f4-44b4-86d3-026cd3a14bf4",
         "active": False,
         "firstName": "Sally",
         "lastName": "Ride",
@@ -57,7 +57,7 @@ INITIAL_ASTRONAUTS = [
         "picture": "sally-ride.jpg"
     },
     {
-        "id": 6,
+        "id": "7467310a-1e8d-40bd-afc2-14a18cb09d18",
         "active": True,
         "firstName": "Kjell",
         "lastName": "Lindgren",
@@ -68,7 +68,7 @@ INITIAL_ASTRONAUTS = [
         "picture": "kjell-lindgren.jpg"
     },
     {
-        "id": 7,
+        "id": "853cd3ca-4da5-4063-abcf-809458ad0d2c",
         "active": True,
         "firstName": "Jeanette",
         "lastName": "Epps",

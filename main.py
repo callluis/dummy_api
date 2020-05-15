@@ -23,8 +23,8 @@ class App(falcon.API):
         self.add_route('/api/credentials', users.JWTLogin())
         
         # Astronauts
-        # self.add_route('/api/astronauts', astronauts.List())
-        # self.add_route('/api/astronauts/{id_}', astronauts.Detail())
+        self.add_route('/api/astronauts', astronauts.List())
+        self.add_route('/api/astronauts/{id_}', astronauts.Detail())
 
         # This catches none existing paths
         self.add_sink(generic_path_error_handler, '')

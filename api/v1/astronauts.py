@@ -1,4 +1,244 @@
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+# Standard python libraries
+import falcon
+import uuid
+import json
+from collections import OrderedDict
+from contextlib import suppress
+
+from api.common import BaseResource
+from conf.config import LOG, SUPER_ADMIN_KEY
+from db import database as db
+from middleware.jwt_authentication import validate_token
+from utils.errors import generic_error_handler
+from utils.hashing_tools import make_password_hashing, checking_password_hash
+from utils.jwt_module import jwt_payload_handler
+
+class List(BaseResource):
+    """
+    Handle for endpoint: /api/credentials
+    """
+    def __init__(self, **kwargs):
+        """ Creates a client instance """
+        super(List, self).__init__(**kwargs)
+    
+    @falcon.before(validate_token)
+    def on_get(self, req, res):
+        params = req.params
+        if params.get('id'):
+            params['id_'] = params['id'] 
+        astronauts = db.fetch_astronauts(filters=params)
+        data = {'count': len(astronauts), 'items': astronauts}
+        self.on_success(res, data)
+    
+    @falcon.before(validate_token)
+    def on_post(self, req, res):
+    
+        skills = req.get_json('skills')
+
+        if not isinstance(skills, list):
+            error = {
+                'description': 'invalid skills',
+                'details': f"'skills' field needs to be an array/list"
+            }
+            LOG.error(error)
+            raise generic_error_handler(400, req=req, error_override=error)
+
+        astronaut = {
+            'id': str(uuid.uuid4()),
+            'active': True,
+            'firstName': req.get_json('firstName', dtype=str, min=3, max=20),
+            'lastName': req.get_json('lastName', dtype=str, min=3, max=20),
+            'skills': skills,
+            'hoursInSpace': req.get_json('hoursInSpace', dtype=int, min=0),
+            'picture': req.get_json('picture', dtype=str, min=3)
+        }
+        
+        try:
+            db.add_astronauts_bulk([astronaut])
+        except Exception as ex:
+            error = {
+                'description': ex
+            }
+            LOG.error(error)
+            raise generic_error_handler(400, req=req, error_override=error)
+
+        self.on_created(res, astronaut)
+
+    # def on_put(self, req, res):
+    #     username = req.get_json('username', dtype=str, min=3, max=20)
+    #     password = req.get_json('password', dtype=str, min=8, max=20)
+    #     new_password = req.get_json('new_password', dtype=str, min=8, max=20)
+
+    #     users = db.fetch_users(username)
+
+    #     user_id = str(uuid.uuid4())
+    #     pasword = make_password_hashing(new_password)
+
+    #     if len(users) == 1:
+    #         if not checking_password_hash(password, users[0]['password']):
+    #             error = {
+    #                 'description': 'Incorrect password entered',
+    #             }
+    #             LOG.error(error)
+    #             raise generic_error_handler(401, req=req, error_override=error)
+    #         else:
+    #             db.replace_user_info(user_id, username, pasword)
+                
+    #     elif len(users) > 1:
+    #         error = {
+    #             'description': f"There was more than 1 user found for username: '{username}'"
+    #         }
+    #         LOG.error(error)
+    #         raise generic_error_handler(400, req=req, error_override=error)
+    #     else:
+    #         db.create_user(user_id, username, pasword)
+        
+    #     data = {
+    #         'id': user_id,
+    #         'username': username
+    #     }
+
+    #     self.on_success(res, data)
+
+    
+
+    
+
+class Detail(BaseResource):
+    """
+    Handle for endpoint: /api/credentials/
+    """
+    def __init__(self, **kwargs):
+        """ Creates a client instance """
+        super(Detail, self).__init__(**kwargs)
+
+    @falcon.before(validate_token)
+    def on_get(self, req, res, id_):
+        params = {'id_': id_}
+        astronauts = db.fetch_astronauts(filters=params)
+        if astronauts:
+            data = astronauts[0]
+        else:
+            error = {
+                'description': 'Invalid astronaut',
+                'details': f"An astronaut with id '{id_}' doesn't exist."
+            }
+            LOG.error(error)
+            raise generic_error_handler(404, req=req, error_override=error)
+        self.on_success(res, data)
+
+
+    # def on_patch(self, req, res):
+    #     username = req.get_json('username', dtype=str, min=3, max=20)
+    #     password = req.get_json('password', dtype=str, min=8, max=20)
+    #     new_password = req.get_json('new_password', dtype=str, min=8, max=20)
+
+    #     pasword = make_password_hashing(new_password)
+        
+    #     users = db.fetch_users(username)
+
+    #     if len(users) == 1:
+    #         if not checking_password_hash(password, users[0]['password']):
+    #             error = {
+    #                 'description': 'Incorrect password entered',
+    #             }
+    #             LOG.error(error)
+    #             raise generic_error_handler(401, req=req, error_override=error)
+    #         else:
+    #             db.update_password(users[0]['id'], pasword)
+    #             data = {
+    #                 'id': users[0]['id'],
+    #                 'username': username
+    #             }
+
+    #             self.on_success(res, data)
+
+    #     elif len(users) > 1:
+    #         error = {
+    #             'description': f"There was more than 1 user found for username: '{username}'"
+    #         }
+    #         LOG.error(error)
+    #         raise generic_error_handler(400, req=req, error_override=error)
+
+    #     else:
+    #         error = {
+    #             'description': 'Invalid username',
+    #             'details': f"{username} doesn't exist."
+    #         }
+    #         LOG.error(error)
+    #         raise generic_error_handler(404, req=req, error_override=error)
+
+    # def on_delete(self, req, res, user_id=None):
+    #     if user_id:
+    #         users = db.fetch_users(None, user_id=user_id)
+
+    #         if users:
+    #             if req.get_header('SUPER_ADMIN_KEY') == SUPER_ADMIN_KEY:
+    #                 db.delete_from_table(user_id)
+    #                 self.on_no_content(res, {})
+    #             else:
+    #                 error = {
+    #                     'description': 'Unauthorized',
+    #                     'details': "Permission Denied" 
+    #                 }
+    #                 LOG.error(error)
+    #                 raise generic_error_handler(401, req=req, error_override=error)
+    #         else:
+    #             error = {
+    #                 'description': 'Invalid user_id',
+    #                 'details': f"{user_id} doesn't exist."
+    #             }
+    #             LOG.error(error)
+    #             raise generic_error_handler(404, req=req, error_override=error)
+
+    #     else:
+    #         raise generic_error_handler(500, req=req)
+
+
+    # def on_post(self, req, res):
+    #     username = req.get_json('username', dtype=str)
+    #     password = req.get_json('password', dtype=str)
+
+    #     users = db.fetch_users(username)
+    #     if len(users) == 1:
+    #         if not checking_password_hash(password, users[0]['password']):
+    #             error = {
+    #                 'description': 'either username or password is invalid'
+    #             }
+    #             LOG.error(error)
+    #             raise generic_error_handler(401, req=req, error_override=error)
+    #         else:
+    #             payload = OrderedDict()
+    #             payload['id'] = users[0]['id']
+    #             payload['username'] = username
+                
+    #             data = jwt_payload_handler(payload)
+
+    #             payload = {**payload, **data}
+
+    #             self.on_success(res, payload)
+
+        
+    #     elif len(users) > 1:
+    #         error = {
+    #             'description': f"There was more than 1 user found for username: '{username}'"
+    #         }
+    #         LOG.error(error)
+    #         raise generic_error_handler(401, req=req, error_override=error)
+
+    #     else:
+    #         error = {
+    #             'description': 'either username or password is invalid'
+    #         }
+    #         LOG.error(error)
+    #         raise generic_error_handler(401, req=req, error_override=error)
+
+# @falcon.before(validate_jwt_token)
+
+
+
 # Standard python libraries
 # import falcon
 # import uuid

@@ -1,7 +1,6 @@
 import jwt
 
 from conf.config import LOG, API_SECRET_KEY
-from db.dummy import ACTIVE_USERS
 from utils.errors import generic_error_handler
 
 def validate_token(req, resp, resource, params):
