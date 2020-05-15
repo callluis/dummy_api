@@ -129,6 +129,28 @@ class Detail(BaseResource):
             raise generic_error_handler(404, req=req, error_override=error)
         self.on_success(res, data)
 
+    @falcon.before(validate_token)
+    def on_delete(self, req, res, id_):
+        params = {'id_': id_}
+        astronauts = db.fetch_astronauts(filters=params)
+        if astronauts:
+            data = astronauts[0]
+            astronaut_id = astronauts[0]['id']
+            db.delete_from_table('astronauts', astronaut_id)
+            
+        else:
+            error = {
+                'description': 'Invalid astronaut',
+                'details': f"An astronaut with id '{id_}' doesn't exist."
+            }
+            LOG.error(error)
+            raise generic_error_handler(404, req=req, error_override=error)
+        if req.params.get('details') == 'true':
+            data['meta'] = {'action': f'astronaut {astronauts[0]["firstName"]} {astronauts[0]["lastName"]} has been deleted'}
+            self.on_success(res, data)
+        else:
+            self.on_no_content(res, {})
+        
 
     # def on_patch(self, req, res):
     #     username = req.get_json('username', dtype=str, min=3, max=20)
