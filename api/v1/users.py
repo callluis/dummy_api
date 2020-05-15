@@ -3,6 +3,7 @@
 import falcon
 import uuid
 import json
+from collections import OrderedDict
 from contextlib import suppress
 
 from api.common import BaseResource
@@ -10,6 +11,7 @@ from conf.config import LOG, SUPER_ADMIN_KEY
 from db import database as db
 from utils.errors import generic_error_handler
 from utils.hashing_tools import make_password_hashing, checking_password_hash
+from utils.jwt_module import jwt_payload_handler
 
 class Users(BaseResource):
     """
@@ -186,61 +188,51 @@ class Users(BaseResource):
             }
             LOG.error(error)
             raise generic_error_handler(401, req=req, error_override=error)
+
+class JWTLogin(BaseResource):
+    """
+    Handle for endpoint: /api/credentials/
+    """
+    def __init__(self, **kwargs):
+        """ Creates a client instance """
+        super(JWTLogin, self).__init__(**kwargs)
+
+    def on_post(self, req, res):
+        username = req.get_json('username', dtype=str)
+        password = req.get_json('password', dtype=str)
+
+        users = db.fetch_users(username)
+        if len(users) == 1:
+            if not checking_password_hash(password, users[0]['password']):
+                error = {
+                    'description': 'either username or password is invalid'
+                }
+                LOG.error(error)
+                raise generic_error_handler(401, req=req, error_override=error)
+            else:
+                payload = OrderedDict()
+                payload['id'] = users[0]['id']
+                payload['username'] = username
+                
+                data = jwt_payload_handler(payload)
+
+                payload = {**payload, **data}
+
+                self.on_success(res, payload)
+
         
-        
+        elif len(users) > 1:
+            error = {
+                'description': f"There was more than 1 user found for username: '{username}'"
+            }
+            LOG.error(error)
+            raise generic_error_handler(401, req=req, error_override=error)
 
-# def on_post(self, req, res):
-#         # ACTIVE_USERS = {
-#         #     'tom': {
-#         #         'password': 'whatever',
-#         #         'secret':   'revetahw'
-#         #     }
-#         # }
-
-#         username = req.get_json('username', dtype=str, min=3, max=20)
-#         password = req.get_json('password', dtype=str, min=8, max=20)
-
-#         if not username:
-#             error = {
-#                 'title': 'Invalid username',
-#                 'description': f'{username} is not valid'
-#             }
-#             LOG.error(error)
-#             raise generic_error_handler(400, req=req, error_override=error)
-
-#         if username in ACTIVE_USERS:
-#             error = {
-#                 'title': 'Invalid username',
-#                 'description': f'{username} already exists.'
-#             }
-#             LOG.error(error)
-#             raise generic_error_handler(400, req=req, error_override=error)
-       
-#         # Create an api_key
-#         api_key = str(uuid.uuid4())
-
-#         tmp_user_info = {
-#             username: {
-#                 'password': make_password_hashing(password),
-#                 'api_key':  api_key
-#             }
-#         }
-
-#         ACTIVE_USERS.append(tmp_user_info)
-
-#         self.on_created(res, {})
-
-
-
-# def Login(self):
-#     if checking_password_hash(password_python, hobbyist.password) == True:
-#         session['hobbyist'] = hobbyist_python
-#         flash('Welcome back, ' + str(hobbyist_python) + '.', 'allgood')
-#         return redirect("/")
-#     elif checking_password_hash(password_python, hobbyist.password) == False:
-#         flash("Sorry " + str(hobbyist_python) + ", that was not your password. :( ", "error10")
-#         #return redirect("/login")
-#         return render_template('zlogin.html', hobbyistname=hobbyist_python)
-            
+        else:
+            error = {
+                'description': 'either username or password is invalid'
+            }
+            LOG.error(error)
+            raise generic_error_handler(401, req=req, error_override=error)
 
 # @falcon.before(validate_jwt_token)

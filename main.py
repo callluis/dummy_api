@@ -18,7 +18,9 @@ class App(falcon.API):
         # Users
         self.add_route('/api/users', users.Users())
         self.add_route('/api/users/{user_id}', users.Users())
-        # self.add_route('/api/login', d4uth.Login())
+
+        # Credentials to get JWT
+        self.add_route('/api/credentials', users.JWTLogin())
         
         # Astronauts
         # self.add_route('/api/astronauts', astronauts.List())

@@ -13,6 +13,7 @@ APP_NAME = 'Dummy API'
 # =============================================================================
 API_SECRET_KEY = os.environ.get('API_SECRET_KEY', 'whatever')
 SUPER_ADMIN_KEY = os.environ.get('SUPER_ADMIN_KEY', 'SUPER')
+JWT_EXPIRATION_TIME = int(os.environ.get('JWT_EXPIRATION_TIME', '30'))
 
 # =============================================================================
 # Logging
