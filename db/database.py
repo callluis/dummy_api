@@ -89,10 +89,10 @@ def update_password(id_, password):
     conn.commit()
     conn.close()
 
-def delete_from_table(id_):
+def delete_from_table(table, id_):
     conn = create_connection(DATABASE)
     c = conn.cursor()
-    c.execute(f"DELETE FROM users WHERE id_=?", (id_, ))
+    c.execute(f"DELETE FROM {table} WHERE id_='{id_}';")
     conn.commit()
     conn.close()
 

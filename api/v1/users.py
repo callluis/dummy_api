@@ -139,7 +139,7 @@ class Users(BaseResource):
 
             if users:
                 if req.get_header('SUPER_ADMIN_KEY') == SUPER_ADMIN_KEY:
-                    db.delete_from_table(user_id)
+                    db.delete_from_table('users', user_id)
                     self.on_no_content(res, {})
                 else:
                     error = {
