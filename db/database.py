@@ -96,6 +96,13 @@ def delete_from_table(id_):
     conn.commit()
     conn.close()
 
+def drop_table(table):
+    conn = create_connection(DATABASE)
+    c = conn.cursor()
+    c.execute(f"DROP TABLE IF EXISTS {table};")
+    conn.commit()
+    conn.close()
+
 # def delete_from_table(id_, table):
 #     conn = create_connection(DATABASE)
 #     c = conn.cursor()

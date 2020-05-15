@@ -1,6 +1,9 @@
 
 from conf.config import LOG, DATABASE
-from db.database import create_connection, create_table
+from db.database import create_connection, create_table, drop_table
+
+sql_drop_users = "DELETE FROM users;"
+sql_drop_astronauts = "DELETE FROM astronauts;"
 
 sql_create_users_table = """CREATE TABLE IF NOT EXISTS users (
                                 id_ text PRIMARY KEY UNIQUE,
@@ -21,6 +24,8 @@ sql_create_astronauts_table = """CREATE TABLE IF NOT EXISTS astronauts (
 def init_session():
     conn = create_connection(DATABASE)
     if conn is not None:
+        drop_table('users')
+        drop_table('astronauts')
         create_table(conn, sql_create_users_table)
         create_table(conn, sql_create_astronauts_table)
     else:
