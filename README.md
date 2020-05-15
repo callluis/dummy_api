@@ -7,5 +7,5 @@ Just a dummy API to have a class about APIs.
 
 ## Execution
 1. `cd` using the terminal to the root folder of the project.
-2. Run command `gunicorn main:application --bind 127.0.0.1:8100 --reload` 
-3. Start sending [requests](./api/documentation) to that port.
+2. Run command `gunicorn main:application --bind 127.0.0.1:8100 --reload --timeout 500` 
+3. Start sending [requests](./collection) to the API.

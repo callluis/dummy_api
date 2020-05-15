@@ -179,7 +179,7 @@ class Users(BaseResource):
                 username = req.params.get('username')
                 user_id = req.params.get('id')
                 users = db.fetch_users(username=username, user_id=user_id, hide_pass=True)
-                data = {'items': users}
+                data = {'count': len(users),'items': users}
             self.on_success(res, data)
         else:
             error = {
@@ -234,5 +234,3 @@ class JWTLogin(BaseResource):
             }
             LOG.error(error)
             raise generic_error_handler(401, req=req, error_override=error)
-
-# @falcon.before(validate_jwt_token)
