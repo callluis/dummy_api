@@ -25,10 +25,9 @@ class BaseResource(object):
 
     def on_success(self, res, data=None):
         res.status = falcon.HTTP_200
-        meta = {
-            'code': 200,
-            'message': 'OK'
-        }
+        meta = data.get('meta') or {}
+        meta['code'] = 200
+        meta['message'] = 'OK'
         data['meta'] = meta
         res.json = data
 
