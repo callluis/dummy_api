@@ -151,31 +151,42 @@ class Detail(BaseResource):
         else:
             self.on_no_content(res, {})
         
-
-    # def on_patch(self, req, res):
-    #     username = req.get_json('username', dtype=str, min=3, max=20)
-    #     password = req.get_json('password', dtype=str, min=8, max=20)
-    #     new_password = req.get_json('new_password', dtype=str, min=8, max=20)
-
-    #     pasword = make_password_hashing(new_password)
+    @falcon.before(validate_token)
+    def on_patch(self, req, res, id_):
+        params = {'id_': id_}
+        astronauts = db.fetch_astronauts(filters=params)
+        if astronauts:
+            data = astronauts[0]
         
-    #     users = db.fetch_users(username)
+            payload = OrderedDict()
+            payload["active"] = req.get_json("active", default=data['active'])
+            payload["firstName"] = req.get_json("firstName", default=data['firstName'])
+            payload["lastName"] = req.get_json("lastName", default=data['lastName'])
+            skills = req.get_json("skills", default=data['skills'])
+            if not isinstance(skills, list):
+                error = {
+                    'description': 'invalid skills',
+                    'details': f"'skills' field needs to be an array/list"
+                }
+                LOG.error(error)
+                raise generic_error_handler(400, req=req, error_override=error)
+            payload["skills"] = skills
+            payload["hoursInSpace"] = req.get_json("hoursInSpace", default=data['hoursInSpace'])
+            payload["picture"] = req.get_json("picture", default=data['picture'])
 
-    #     if len(users) == 1:
-    #         if not checking_password_hash(password, users[0]['password']):
-    #             error = {
-    #                 'description': 'Incorrect password entered',
-    #             }
-    #             LOG.error(error)
-    #             raise generic_error_handler(401, req=req, error_override=error)
-    #         else:
-    #             db.update_password(users[0]['id'], pasword)
-    #             data = {
-    #                 'id': users[0]['id'],
-    #                 'username': username
-    #             }
+            db.update_astronaut_info(id_, fields=payload)
 
-    #             self.on_success(res, data)
+        else:
+            error = {
+                'description': 'Invalid astronaut',
+                'details': f"An astronaut with id '{id_}' doesn't exist."
+            }
+            LOG.error(error)
+            raise generic_error_handler(404, req=req, error_override=error)
+
+        payload = {**{'id': id_}, **payload}
+
+        self.on_success(res, payload)
 
     #     elif len(users) > 1:
     #         error = {

@@ -162,6 +162,27 @@ def fetch_astronauts(filters=None):
     conn.close()
     return astronauts
 
+def build_patch_query(id_, filters):
+    astronaut_fields = ["active", "firstName", "skills", "lastName", "hoursInSpace", "picture"]
+    query = ""
+    for k,v in filters.items():
+        if k in astronaut_fields:
+            if k == 'skills':
+                skills = ",".join(v)
+                query += f"{k} = '{skills}', "
+            else:
+                query += f"{k} = '{v}', "
+    if query:
+        query = f"UPDATE astronauts SET {query.rsplit(', ', 1)[0]} WHERE id_ = '{id_}';" 
+    return query
+
+def update_astronaut_info(id_, fields=None):
+    conn = create_connection(DATABASE)
+    c = conn.cursor()
+    c.execute(build_patch_query(id_, fields))
+    conn.commit()
+    conn.close()
+
 # def delete_from_table(id_, table):
 #     conn = create_connection(DATABASE)
 #     c = conn.cursor()

@@ -135,12 +135,17 @@ class Users(BaseResource):
 
     def on_delete(self, req, res, user_id=None):
         if user_id:
-            users = db.fetch_users(None, user_id=user_id)
+            users = db.fetch_users(None, user_id=user_id, hide_pass=True)
 
             if users:
                 if req.get_header('SUPER_ADMIN_KEY') == SUPER_ADMIN_KEY:
                     db.delete_from_table('users', user_id)
-                    self.on_no_content(res, {})
+                    if req.params.get('details') == 'true':
+                        data = users[0]
+                        data['meta'] = {'action': f'user \'{users[0]["username"]}\' has been deleted'}
+                        self.on_success(res, data)
+                    else:
+                        self.on_no_content(res, {})
                 else:
                     error = {
                         'description': 'Unauthorized',
