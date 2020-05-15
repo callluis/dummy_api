@@ -6,6 +6,209 @@
 	},
 	"item": [
 		{
+			"name": "TESTs",
+			"item": [
+				{
+					"name": "Bad Request (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ccdec04c-f2d8-4f01-b9bd-1813556c7603",
+								"exec": [
+									"tests[\"Status code is 400\"] = responseCode.code === 400;",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8100",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8100"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Method Not Allowed (405)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2e3938fa-89e6-4c91-b0e7-91ba9be66226",
+								"exec": [
+									"tests[\"Status code is 405\"] = responseCode.code === 405;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DUMMY_API_HOST}}",
+							"host": [
+								"{{DUMMY_API_HOST}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resource Not Found (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a0df100f-2dfe-425e-8ef6-6920386fa2e2",
+								"exec": [
+									"tests[\"Status code is 404\"] = responseCode.code === 404;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DUMMY_API_HOST}}/api/",
+							"host": [
+								"{{DUMMY_API_HOST}}"
+							],
+							"path": [
+								"api",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign Up",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ec8865ca-71de-4b00-8424-6b8ee3101aa7",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"luis3\",\n\t\"password\": \"whatever\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DUMMY_API_HOST}}/api/users",
+							"host": [
+								"{{DUMMY_API_HOST}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Credentials (tests)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8318f9a6-0ccd-49c6-949b-520c1b47bfe1",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"var token = data.jwt",
+									"var jwt = \"JWT \" + data.jwt",
+									"postman.setEnvironmentVariable(\"jwt\", jwt);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"// tests[\"Status code is 201\"] = responseCode.code === 201;",
+									"",
+									"let username = data.username",
+									"console.log(username)",
+									"pm.test(\"username should be 'luis3'\", function() {",
+									"    pm.expect(username).to.eql(\"luis3\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"luis3\",\n\t\"password\": \"whatever\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DUMMY_API_HOST}}/api/credentials",
+							"host": [
+								"{{DUMMY_API_HOST}}"
+							],
+							"path": [
+								"api",
+								"credentials"
+							]
+						},
+						"description": "This in order to get a JWT (JSON Web Token) -> For more info visit jwt.io"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "PING",
 			"request": {
 				"method": "GET",
@@ -26,6 +229,18 @@
 		},
 		{
 			"name": "Bad Request (400)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ccdec04c-f2d8-4f01-b9bd-1813556c7603",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -148,13 +363,13 @@
 			"response": []
 		},
 		{
-			"name": "Create user credentials",
+			"name": "Sign Up",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"username\": \"luis2\",\n\t\"password\": \"whatever\"\n}",
+					"raw": "{\n\t\"username\": \"luis3\",\n\t\"password\": \"whatever\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -175,7 +390,7 @@
 			"response": []
 		},
 		{
-			"name": "Create user credentials FORM-DATA",
+			"name": "Sign Up FORM-DATA",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -280,7 +495,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"username\": \"luis4\",\n\t\"password\": \"whatever3\",\n\t\"new_password\": \"whatever3\"\n}",
+					"raw": "{\n\t\"username\": \"luis\",\n\t\"password\": \"whatever2\",\n\t\"new_password\": \"whatever2\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -371,7 +586,7 @@
 					"variable": [
 						{
 							"key": "user_id",
-							"value": "9c2c78bd-8196-4391-83ed-30a1cbe2bc2d"
+							"value": "cf398b9f-ec8b-4186-a29b-cee9f27cfd02"
 						}
 					]
 				}
@@ -573,7 +788,394 @@
 					"variable": [
 						{
 							"key": "user_id",
-							"value": ""
+							"value": "9f4bc6d1-f65a-4796-a8bc-1d9201ee8aae"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Credentials (tests)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8318f9a6-0ccd-49c6-949b-520c1b47bfe1",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"var token = data.jwt",
+							"var jwt = \"JWT \" + data.jwt",
+							"postman.setEnvironmentVariable(\"jwt\", jwt);",
+							"",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"// tests[\"Status code is 201\"] = responseCode.code === 201;",
+							"",
+							"let username = data.username",
+							"console.log(username)",
+							"pm.test(\"username should be 'luis3'\", function() {",
+							"    pm.expect(username).to.eql(\"luis3\");",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"luis3\",\n\t\"password\": \"whatever\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{DUMMY_API_HOST}}/api/credentials",
+					"host": [
+						"{{DUMMY_API_HOST}}"
+					],
+					"path": [
+						"api",
+						"credentials"
+					]
+				},
+				"description": "This in order to get a JWT (JSON Web Token) -> For more info visit jwt.io"
+			},
+			"response": []
+		},
+		{
+			"name": "Astronauts list view (jwt)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{DUMMY_API_HOST}}/api/astronauts/",
+					"host": [
+						"{{DUMMY_API_HOST}}"
+					],
+					"path": [
+						"api",
+						"astronauts",
+						""
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "77f72736-b07a-4dca-9003-ab4a161a8392",
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "5083a5ea-f37b-4f64-85bf-c6cf2cc55f31",
+							"disabled": true
+						},
+						{
+							"key": "active",
+							"value": "Ellen",
+							"disabled": true
+						},
+						{
+							"key": "firstName",
+							"value": "Ellen",
+							"disabled": true
+						},
+						{
+							"key": "lastName",
+							"value": "Ochoa",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Astronauts list view filters",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{jwt}}"
+					}
+				],
+				"url": {
+					"raw": "{{DUMMY_API_HOST}}/api/astronauts/?firstName=Ellen&lastName=Ocho",
+					"host": [
+						"{{DUMMY_API_HOST}}"
+					],
+					"path": [
+						"api",
+						"astronauts",
+						""
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "77f72736-b07a-4dca-9003-ab4a161a8392",
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "5083a5ea-f37b-4f64-85bf-c6cf2cc55f31",
+							"disabled": true
+						},
+						{
+							"key": "active",
+							"value": "Ellen",
+							"disabled": true
+						},
+						{
+							"key": "firstName",
+							"value": "Ellen"
+						},
+						{
+							"key": "lastName",
+							"value": "Ochoa",
+							"disabled": true
+						},
+						{
+							"key": "lastName",
+							"value": "Ocho"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Astronauts detail view (path param)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{DUMMY_API_HOST}}/api/astronauts/:austronaut_id",
+					"host": [
+						"{{DUMMY_API_HOST}}"
+					],
+					"path": [
+						"api",
+						"astronauts",
+						":austronaut_id"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "77f72736-b07a-4dca-9003-ab4a161a8392",
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "5083a5ea-f37b-4f64-85bf-c6cf2cc55f31",
+							"disabled": true
+						},
+						{
+							"key": "active",
+							"value": "Ellen",
+							"disabled": true
+						},
+						{
+							"key": "firstName",
+							"value": "Ellen",
+							"disabled": true
+						},
+						{
+							"key": "lastName",
+							"value": "Ochoa",
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "austronaut_id",
+							"value": "7467310a-1e8d-40bd-afc2-14a18cb09d18"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Astronauts detail view (404)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{jwt}}"
+					}
+				],
+				"url": {
+					"raw": "{{DUMMY_API_HOST}}/api/astronauts/:austronaut_id",
+					"host": [
+						"{{DUMMY_API_HOST}}"
+					],
+					"path": [
+						"api",
+						"astronauts",
+						":austronaut_id"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "77f72736-b07a-4dca-9003-ab4a161a8392",
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "5083a5ea-f37b-4f64-85bf-c6cf2cc55f31",
+							"disabled": true
+						},
+						{
+							"key": "active",
+							"value": "Ellen",
+							"disabled": true
+						},
+						{
+							"key": "firstName",
+							"value": "Ellen",
+							"disabled": true
+						},
+						{
+							"key": "lastName",
+							"value": "Ochoa",
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "austronaut_id",
+							"value": "7467310a-1e8d-40bd-afc2-14a18cb09d1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Astronaut",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{jwt}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"Derek\",\n    \"lastName\": \"Jemison\",\n    \"skills\": [\n        \"Physician\",\n        \"Chemical Engineer\"\n    ],\n    \"hoursInSpace\": 190,\n    \"picture\": \"mae-jemison.jpg\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{DUMMY_API_HOST}}/api/astronauts",
+					"host": [
+						"{{DUMMY_API_HOST}}"
+					],
+					"path": [
+						"api",
+						"astronauts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Astronaut (400)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{jwt}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"Mary\",\n    \"lastName\": \"Jemison\",\n    \"skills\": [\n        \"Physician\",\n        \"Chemical Engineer\"\n    ],\n    \"hoursInSpace\": 190,\n    \"picture\": \"mae-jemison.jpg\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{DUMMY_API_HOST}}/api/astronauts",
+					"host": [
+						"{{DUMMY_API_HOST}}"
+					],
+					"path": [
+						"api",
+						"astronauts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Astronaut",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "bnxBLfzi13YhHbShefqCL495r8H5rMVw9uSbYcZi",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "scm_eng_dev_0_app_user",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "SUPER_ADMIN_KEY",
+						"type": "text",
+						"value": "SUPER"
+					}
+				],
+				"url": {
+					"raw": "{{DUMMY_API_HOST}}/api/astronaut/:austronaut_id",
+					"host": [
+						"{{DUMMY_API_HOST}}"
+					],
+					"path": [
+						"api",
+						"astronaut",
+						":austronaut_id"
+					],
+					"variable": [
+						{
+							"key": "austronaut_id",
+							"value": "4c8915ed-0f49-44f4-8497-af45956f339e"
 						}
 					]
 				}
