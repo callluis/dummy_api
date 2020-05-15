@@ -3,4 +3,4 @@ gunicorn==20.0.4
 # Cerberus==1.2
 # six==1.14.0
 PyJWT==1.7.1
-sqlite3
+db-sqlite3
