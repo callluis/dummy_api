@@ -182,6 +182,9 @@ def update_astronaut_info(id_, fields=None):
     c.execute(build_patch_query(id_, fields))
     conn.commit()
     conn.close()
+    astronaut = fetch_astronauts({'id_': id_})[0]
+    return astronaut
+    
 
 # def delete_from_table(id_, table):
 #     conn = create_connection(DATABASE)
