@@ -244,6 +244,15 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "http://127.0.0.1:8100",
 					"protocol": "http",
@@ -342,7 +351,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"username\": \"luis\"\n}",
+					"raw": "{\n\t\"username\": \"Brian\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -364,12 +373,26 @@
 		},
 		{
 			"name": "Sign Up",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1718ba2a-1ad9-4e9c-bbdd-840bffdb3691",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"var username = data.data.username",
+							"postman.setEnvironmentVariable(\"username\", username);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"username\": \"luis3\",\n\t\"password\": \"whatever\"\n}",
+					"raw": "{\n\t\"username\": \"brandom\",\n\t\"password\": \"whatever\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -406,7 +429,7 @@
 					"formdata": [
 						{
 							"key": "username",
-							"value": "luis9",
+							"value": "liliana",
 							"type": "text"
 						},
 						{
@@ -441,7 +464,18 @@
 				"header": [],
 				"body": {
 					"mode": "urlencoded",
-					"urlencoded": [],
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "mary",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "whatever",
+							"type": "text"
+						}
+					],
 					"options": {
 						"raw": {
 							"language": "json"
@@ -468,7 +502,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"username\": \"luis2\",\n\t\"password\": \"whatever3\",\n\t\"new_password\": \"whatever3\"\n}",
+					"raw": "{\n\t\"username\": \"Becca\",\n\t\"password\": \"whatever3\",\n\t\"new_password\": \"whatever3\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -495,7 +529,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"username\": \"luis\",\n\t\"password\": \"whatever2\",\n\t\"new_password\": \"whatever2\"\n}",
+					"raw": "{\n\t\"username\": \"Alex\",\n\t\"password\": \"whatever2\",\n\t\"new_password\": \"whatever2\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -528,19 +562,20 @@
 					}
 				],
 				"url": {
-					"raw": "{{DUMMY_API_HOST}}/api/users/:user_id",
+					"raw": "{{DUMMY_API_HOST}}/api/users/:user_id/",
 					"host": [
 						"{{DUMMY_API_HOST}}"
 					],
 					"path": [
 						"api",
 						"users",
-						":user_id"
+						":user_id",
+						""
 					],
 					"variable": [
 						{
 							"key": "user_id",
-							"value": ""
+							"value": "358a790f-9f15-4aa1-922a-5da1e218b996"
 						}
 					]
 				}
@@ -550,21 +585,6 @@
 		{
 			"name": "User",
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "bnxBLfzi13YhHbShefqCL495r8H5rMVw9uSbYcZi",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "scm_eng_dev_0_app_user",
-							"type": "string"
-						}
-					]
-				},
 				"method": "DELETE",
 				"header": [
 					{
@@ -586,7 +606,44 @@
 					"variable": [
 						{
 							"key": "user_id",
-							"value": "cf398b9f-ec8b-4186-a29b-cee9f27cfd02"
+							"value": "5ee19e0f-12c3-4d8f-a8be-ed81d4a95933"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User (details)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "SUPER_ADMIN_KEY",
+						"type": "text",
+						"value": "SUPER"
+					}
+				],
+				"url": {
+					"raw": "{{DUMMY_API_HOST}}/api/users/:user_id?details=true",
+					"host": [
+						"{{DUMMY_API_HOST}}"
+					],
+					"path": [
+						"api",
+						"users",
+						":user_id"
+					],
+					"query": [
+						{
+							"key": "details",
+							"value": "true"
+						}
+					],
+					"variable": [
+						{
+							"key": "user_id",
+							"value": "358a790f-9f15-4aa1-922a-5da1e218b996"
 						}
 					]
 				}
@@ -596,28 +653,12 @@
 		{
 			"name": "Unauthorized (401)",
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "bnxBLfzi13YhHbShefqCL495r8H5rMVw9uSbYcZi",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "scm_eng_dev_0_app_user",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [
 					{
 						"key": "SUPER_ADMIN_KEY",
 						"type": "text",
-						"value": "SUPER",
-						"disabled": true
+						"value": "SUPER"
 					}
 				],
 				"url": {
@@ -701,21 +742,6 @@
 		{
 			"name": "Users list view with filters",
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "bnxBLfzi13YhHbShefqCL495r8H5rMVw9uSbYcZi",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "scm_eng_dev_0_app_user",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [
 					{
@@ -725,7 +751,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{DUMMY_API_HOST}}/api/users/?username=luis",
+					"raw": "{{DUMMY_API_HOST}}/api/users/?username=liliana",
 					"host": [
 						"{{DUMMY_API_HOST}}"
 					],
@@ -737,7 +763,7 @@
 					"query": [
 						{
 							"key": "username",
-							"value": "luis"
+							"value": "liliana"
 						},
 						{
 							"key": "id",
@@ -788,7 +814,7 @@
 					"variable": [
 						{
 							"key": "user_id",
-							"value": "9f4bc6d1-f65a-4796-a8bc-1d9201ee8aae"
+							"value": "c24c2577-3e60-4be2-bd1f-18b4080be97b"
 						}
 					]
 				}
@@ -826,7 +852,59 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"username\": \"luis3\",\n\t\"password\": \"whatever\"\n}",
+					"raw": "{\n\t\"username\": \"brandom\",\n\t\"password\": \"whatever\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{DUMMY_API_HOST}}/api/credentials",
+					"host": [
+						"{{DUMMY_API_HOST}}"
+					],
+					"path": [
+						"api",
+						"credentials"
+					]
+				},
+				"description": "This in order to get a JWT (JSON Web Token) -> For more info visit jwt.io"
+			},
+			"response": []
+		},
+		{
+			"name": "Credentials (login) (ready) (tests)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8318f9a6-0ccd-49c6-949b-520c1b47bfe1",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"var token = data.jwt",
+							"var jwt = \"JWT \" + data.jwt",
+							"postman.setEnvironmentVariable(\"jwt\", jwt);",
+							"",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"// tests[\"Status code is 201\"] = responseCode.code === 201;",
+							"",
+							"let username = data.username",
+							"console.log(username)",
+							"pm.test(\"username should be 'luis3'\", function() {",
+							"    pm.expect(username).to.eql(\"luis3\");",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"{{username}}\",\n\t\"password\": \"whatever\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -855,6 +933,12 @@
 					{
 						"key": "Authorization",
 						"value": "{{jwt}}",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Authorization",
+						"value": "jwt",
 						"type": "text"
 					}
 				],
@@ -911,7 +995,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{DUMMY_API_HOST}}/api/astronauts/?firstName=Ellen&lastName=Ocho",
+					"raw": "{{DUMMY_API_HOST}}/api/astronauts/?id=77f72736-b07a-4dca-9003-ab4a161a8392&firstName=Ellen&lastName=Ochoa",
 					"host": [
 						"{{DUMMY_API_HOST}}"
 					],
@@ -923,8 +1007,7 @@
 					"query": [
 						{
 							"key": "id",
-							"value": "77f72736-b07a-4dca-9003-ab4a161a8392",
-							"disabled": true
+							"value": "77f72736-b07a-4dca-9003-ab4a161a8392"
 						},
 						{
 							"key": "id",
@@ -933,7 +1016,7 @@
 						},
 						{
 							"key": "active",
-							"value": "Ellen",
+							"value": "False",
 							"disabled": true
 						},
 						{
@@ -942,12 +1025,12 @@
 						},
 						{
 							"key": "lastName",
-							"value": "Ochoa",
-							"disabled": true
+							"value": "Ochoa"
 						},
 						{
 							"key": "lastName",
-							"value": "Ocho"
+							"value": "Ocho",
+							"disabled": true
 						}
 					]
 				}
@@ -975,37 +1058,10 @@
 						"astronauts",
 						":austronaut_id"
 					],
-					"query": [
-						{
-							"key": "id",
-							"value": "77f72736-b07a-4dca-9003-ab4a161a8392",
-							"disabled": true
-						},
-						{
-							"key": "id",
-							"value": "5083a5ea-f37b-4f64-85bf-c6cf2cc55f31",
-							"disabled": true
-						},
-						{
-							"key": "active",
-							"value": "Ellen",
-							"disabled": true
-						},
-						{
-							"key": "firstName",
-							"value": "Ellen",
-							"disabled": true
-						},
-						{
-							"key": "lastName",
-							"value": "Ochoa",
-							"disabled": true
-						}
-					],
 					"variable": [
 						{
 							"key": "austronaut_id",
-							"value": "7467310a-1e8d-40bd-afc2-14a18cb09d18"
+							"value": "8d6277fb-c950-460b-a0b7-903080cc2dee"
 						}
 					]
 				}
@@ -1033,33 +1089,6 @@
 						"astronauts",
 						":austronaut_id"
 					],
-					"query": [
-						{
-							"key": "id",
-							"value": "77f72736-b07a-4dca-9003-ab4a161a8392",
-							"disabled": true
-						},
-						{
-							"key": "id",
-							"value": "5083a5ea-f37b-4f64-85bf-c6cf2cc55f31",
-							"disabled": true
-						},
-						{
-							"key": "active",
-							"value": "Ellen",
-							"disabled": true
-						},
-						{
-							"key": "firstName",
-							"value": "Ellen",
-							"disabled": true
-						},
-						{
-							"key": "lastName",
-							"value": "Ochoa",
-							"disabled": true
-						}
-					],
 					"variable": [
 						{
 							"key": "austronaut_id",
@@ -1077,8 +1106,8 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "{{jwt}}",
-						"type": "text"
+						"type": "text",
+						"value": "{{jwt}}"
 					}
 				],
 				"body": {
@@ -1208,43 +1237,77 @@
 		{
 			"name": "Astronaut",
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "bnxBLfzi13YhHbShefqCL495r8H5rMVw9uSbYcZi",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "scm_eng_dev_0_app_user",
-							"type": "string"
-						}
-					]
-				},
 				"method": "PATCH",
 				"header": [
 					{
-						"key": "SUPER_ADMIN_KEY",
-						"type": "text",
-						"value": "SUPER"
+						"key": "Authorization",
+						"value": "{{jwt}}",
+						"type": "text"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"James\",\n    \"skills\": [\n        \"Developer\",\n        \"Analysis\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "{{DUMMY_API_HOST}}/api/astronaut/:austronaut_id",
+					"raw": "{{DUMMY_API_HOST}}/api/astronauts/:austronaut_id",
 					"host": [
 						"{{DUMMY_API_HOST}}"
 					],
 					"path": [
 						"api",
-						"astronaut",
+						"astronauts",
 						":austronaut_id"
 					],
 					"variable": [
 						{
 							"key": "austronaut_id",
-							"value": "4c8915ed-0f49-44f4-8497-af45956f339e"
+							"value": "8d6277fb-c950-460b-a0b7-903080cc2dee"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Astronaut (no effect - validation)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "{{jwt}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"Austin\",\n    \"skils\": [\n        \"Physician\",\n        \"Therapist\"\n    ],\n    \"hoursnSpace\": 80,\n    \"active\": false,\n    \"picture\": \"petra-jemison.jpg\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{DUMMY_API_HOST}}/api/astronauts/:austronaut_id",
+					"host": [
+						"{{DUMMY_API_HOST}}"
+					],
+					"path": [
+						"api",
+						"astronauts",
+						":austronaut_id"
+					],
+					"variable": [
+						{
+							"key": "austronaut_id",
+							"value": "a8d4d2dd-3447-4d9e-902c-b22a66327f78"
 						}
 					]
 				}
