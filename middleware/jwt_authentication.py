@@ -18,7 +18,7 @@ def validate_token(req, resp, resource, params):
     except Exception as ex: 
         error = {
             "description": "invalid token, try again",
-            "details": ex
+            "details": str(ex)
         }
         raise generic_error_handler(401, error_override=error)
 
@@ -38,4 +38,4 @@ def token_is_valid(req, token):
             req.username = jwt_body['username']
     except Exception as ex:
         LOG.error(f"There was an error : {ex}")
-        raise Exception(ex)
+        raise Exception(f"{ex}")

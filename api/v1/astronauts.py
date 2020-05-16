@@ -59,7 +59,7 @@ class List(BaseResource):
             db.add_astronauts_bulk([astronaut])
         except Exception as ex:
             error = {
-                'description': ex
+                'description': str(ex)
             }
             LOG.error(error)
             raise generic_error_handler(400, req=req, error_override=error)
