@@ -1,7 +1,7 @@
 
 from conf.config import LOG, DATABASE
-from db.database import create_connection, create_table, drop_table, add_astronauts_bulk
-from db.dummy import ASTRONAUTS
+from db_.database import create_connection, create_table, drop_table, add_astronauts_bulk
+from db_.dummy import ASTRONAUTS
 
 sql_drop_users = "DELETE FROM users;"
 sql_drop_astronauts = "DELETE FROM astronauts;"

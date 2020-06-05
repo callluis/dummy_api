@@ -25,7 +25,7 @@ LOG.setLevel(logging.DEBUG)
 # DATABASE
 # =============================================================================
 # Setting up the database
-DATABASE = "db/data.db"
+DATABASE = "db_/data.db"
 
 # =============================================================================
 # MAPPER to catch regular status_codes (ex.: 404) and convert it

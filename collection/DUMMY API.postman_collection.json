@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "543bb670-0349-4635-ae4c-117c38f0c6c7",
+		"_postman_id": "97d43ad4-005b-423a-a9dd-54bfe5226655",
 		"name": "DUMMY API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,7 +14,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ccdec04c-f2d8-4f01-b9bd-1813556c7603",
+								"id": "91e75eae-3a6c-420f-ba37-94f46450791c",
 								"exec": [
 									"tests[\"Status code is 400\"] = responseCode.code === 400;",
 									""
@@ -46,7 +46,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "2e3938fa-89e6-4c91-b0e7-91ba9be66226",
+								"id": "af9baa5a-4b6b-44d6-a56a-f95bf9073498",
 								"exec": [
 									"tests[\"Status code is 405\"] = responseCode.code === 405;"
 								],
@@ -81,7 +81,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "a0df100f-2dfe-425e-8ef6-6920386fa2e2",
+								"id": "3dfd5882-a730-45e5-a74b-5b35a447a2d6",
 								"exec": [
 									"tests[\"Status code is 404\"] = responseCode.code === 404;"
 								],
@@ -120,7 +120,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "ec8865ca-71de-4b00-8424-6b8ee3101aa7",
+								"id": "302aa517-723e-4db2-baad-8153c7f6e02b",
 								"exec": [
 									"tests[\"Status code is 200\"] = responseCode.code === 200;"
 								],
@@ -159,7 +159,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "8318f9a6-0ccd-49c6-949b-520c1b47bfe1",
+								"id": "c9d234da-59d0-4812-88a0-345ec47e96a2",
 								"exec": [
 									"var data = JSON.parse(responseBody);",
 									"var token = data.jwt",
@@ -233,7 +233,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "ccdec04c-f2d8-4f01-b9bd-1813556c7603",
+						"id": "cf323df0-be35-4f35-8084-65457ea72070",
 						"exec": [
 							""
 						],
@@ -377,7 +377,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "1718ba2a-1ad9-4e9c-bbdd-840bffdb3691",
+						"id": "203228d9-31ea-469a-99d6-5a085bfd9ca4",
 						"exec": [
 							"var data = JSON.parse(responseBody);",
 							"var username = data.data.username",
@@ -658,7 +658,8 @@
 					{
 						"key": "SUPER_ADMIN_KEY",
 						"type": "text",
-						"value": "SUPER"
+						"value": "SUPER",
+						"disabled": true
 					}
 				],
 				"url": {
@@ -690,27 +691,12 @@
 		{
 			"name": "Users list view",
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "bnxBLfzi13YhHbShefqCL495r8H5rMVw9uSbYcZi",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "scm_eng_dev_0_app_user",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [
 					{
-						"key": "SUPER_ADMIN_KEY",
-						"type": "text",
-						"value": "SUPER"
+						"key": "SUPER-ADMIN-KEY",
+						"value": "SUPER",
+						"type": "text"
 					}
 				],
 				"url": {
@@ -745,7 +731,7 @@
 				"method": "GET",
 				"header": [
 					{
-						"key": "SUPER_ADMIN_KEY",
+						"key": "SUPER-ADMIN-KEY",
 						"type": "text",
 						"value": "SUPER"
 					}
@@ -778,25 +764,10 @@
 		{
 			"name": "Users details view",
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "bnxBLfzi13YhHbShefqCL495r8H5rMVw9uSbYcZi",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "scm_eng_dev_0_app_user",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [
 					{
-						"key": "SUPER_ADMIN_KEY",
+						"key": "SUPER-ADMIN-KEY",
 						"type": "text",
 						"value": "SUPER"
 					}
@@ -827,7 +798,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "8318f9a6-0ccd-49c6-949b-520c1b47bfe1",
+						"id": "a9fec68e-e2dc-4b0a-9a08-40a6eb427f4e",
 						"exec": [
 							"var data = JSON.parse(responseBody);",
 							"var token = data.jwt",
@@ -879,7 +850,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "8318f9a6-0ccd-49c6-949b-520c1b47bfe1",
+						"id": "c66226be-dace-4d15-a6c5-5eb5cce94727",
 						"exec": [
 							"var data = JSON.parse(responseBody);",
 							"var token = data.jwt",
@@ -933,13 +904,13 @@
 					{
 						"key": "Authorization",
 						"value": "{{jwt}}",
-						"type": "text",
-						"disabled": true
+						"type": "text"
 					},
 					{
 						"key": "Authorization",
 						"value": "jwt",
-						"type": "text"
+						"type": "text",
+						"disabled": true
 					}
 				],
 				"url": {

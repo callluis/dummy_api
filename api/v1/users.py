@@ -5,10 +5,11 @@ import uuid
 import json
 from collections import OrderedDict
 from contextlib import suppress
+import logging
 
 from api.common import BaseResource
 from conf.config import LOG, SUPER_ADMIN_KEY
-from db import database as db
+from db_ import database as db
 from utils.errors import generic_error_handler
 from utils.hashing_tools import make_password_hashing, checking_password_hash
 from utils.jwt_module import jwt_payload_handler
@@ -165,7 +166,7 @@ class Users(BaseResource):
             raise generic_error_handler(500, req=req)
 
     def on_get(self, req, res, user_id=None):
-        if req.get_header('SUPER_ADMIN_KEY') == SUPER_ADMIN_KEY:
+        if req.get_header('SUPER-ADMIN-KEY') == SUPER_ADMIN_KEY:
             if user_id:
                 users = db.fetch_users(user_id=user_id, hide_pass=True)
                 if users:

@@ -5,7 +5,7 @@ import falcon
 from api.common import base
 from api.v1 import astronauts, users
 from conf.config import APP_NAME, LOG
-from db import init_session
+from db_ import init_session
 from middleware import ConvertToJson, RequireJSON
 from utils.errors import generic_path_error_handler
 

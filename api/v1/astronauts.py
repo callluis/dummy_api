@@ -9,7 +9,7 @@ from contextlib import suppress
 
 from api.common import BaseResource
 from conf.config import LOG, SUPER_ADMIN_KEY
-from db import database as db
+from db_ import database as db
 from middleware.jwt_authentication import validate_token
 from utils.errors import generic_error_handler
 from utils.hashing_tools import make_password_hashing, checking_password_hash
